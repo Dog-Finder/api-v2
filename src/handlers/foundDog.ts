@@ -56,7 +56,7 @@ export const detail: APIGatewayProxyHandler = async (event) => {
   }
 };
 
-export const list: APIGatewayProxyHandler = async (event) => {
+export const list: APIGatewayProxyHandler = async () => {
   try {
     const iterator = mapper.query(
       DogNotice,

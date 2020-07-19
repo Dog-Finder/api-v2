@@ -1,5 +1,5 @@
 service:
-  name: api-ts
+  name: dog-finder-api
 
 provider:
   name: aws
@@ -15,7 +15,7 @@ provider:
     DEBUG: '*'
     NODE_ENV: ${self:provider.stage}
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
-    DB_NAME: dog-finder-ts
+    DB_NAME: dog-finder-db
     CONFIG_DYNAMODB_ENDPOINT: ${self:custom.endpoints.dynamodb-local}
   iamRoleStatements:
     - Effect: Allow
@@ -28,22 +28,12 @@ custom:
   webpack:
     webpackConfig: ./webpack.config.js
     includeModules: true
+    packager: "yarn"
   serverless-iam-roles-per-function:
     defaultInherit: true # Each function will inherit the service level roles too.
   prune: # automatically prune old lambda versions
     automatic: true
     number: 3
-  dynamodb:
-    start:
-      migrate: true
-      seed: true
-    stages:
-      - local
-    seed:
-      local:
-        sources:
-          - table: ${self:provider.environment.DB_NAME}
-            sources: [./seeds/notices.json]
   endpoints:
     dynamodb-local: 'http://localhost:8000'
 
@@ -53,42 +43,6 @@ plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
   - serverless-prune-plugin
-  - serverless-dynamodb-local
-
-resources:
-  Resources:
-    DynamoDbTable:
-      Type: "AWS::DynamoDB::Table"
-      Properties:
-        AttributeDefinitions:
-          - AttributeName: "id"
-            AttributeType: "S"
-          - AttributeName: "type"
-            AttributeType: "S"
-          - AttributeName: "createdAt"
-            AttributeType: "N"
-        KeySchema:
-          - AttributeName: "id"
-            KeyType: "HASH"
-          - AttributeName: "type"
-            KeyType: "RANGE"
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-        GlobalSecondaryIndexes:
-          - IndexName: "type-createdAt-index"
-            KeySchema:
-              - AttributeName: "type"
-                KeyType: "HASH"
-              - AttributeName: "createdAt"
-                KeyType: "RANGE"
-            Projection:
-              ProjectionType: "ALL"
-            ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
-                
-        TableName: ${self:provider.environment.DB_NAME}
 
 functions:
   foundDogCreate:
