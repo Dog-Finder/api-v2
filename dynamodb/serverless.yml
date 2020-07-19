@@ -17,13 +17,14 @@ provider:
         - xray:PutTelemetryRecords
       Resource: "*"
 
+
 custom:
   dynamodb:
     start:
       migrate: true
       seed: true
     stages:
-      - local
+      - dev
     seed:
       local:
         sources:
