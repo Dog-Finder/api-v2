@@ -17,7 +17,7 @@
       "import/no-unresolved": [2, {"commonjs": true, "amd": true}],
       "import/prefer-default-export": "off",
       "max-len": ["error", {
-        "code":  150,
+        "code":  100,
         "ignoreComments":  true,
         "ignoreTrailingComments":  true,
         "ignoreUrls": true,

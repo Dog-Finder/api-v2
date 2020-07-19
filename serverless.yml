@@ -80,9 +80,27 @@ resources:
         TableName: ${self:provider.environment.DB_NAME}
 
 functions:
-  hello:
-    handler: src/handler.hello
+  foundDogCreate:
+    handler: src/handlers/foundDog.create
+    events:
+      - http:
+          method: post
+          path: found-dog
+  foundDogDelete:
+    handler: src/handlers/foundDog.del
+    events:
+      - http:
+          method: delete
+          path: found-dog/{id}
+  foundDogEdit:
+    handler: src/handlers/foundDog.edit
+    events:
+      - http:
+          method: put
+          path: found-dog/{id}
+  foundDogDetail:
+    handler: src/handlers/foundDog.detail
     events:
       - http:
           method: get
-          path: hello
+          path: found-dog/{id}
