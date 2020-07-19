@@ -1,4 +1,5 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
+import { greaterThan } from '@aws/dynamodb-expressions';
 import mapper from '@src/db_config';
 import { createDogNotice, DogNotice } from '@src/models/dog-notice';
 import { createOkResponse, createErrorResponse } from '@src/handlers/utils';
@@ -50,6 +51,24 @@ export const detail: APIGatewayProxyHandler = async (event) => {
     toFetch.type = 'found';
     const fetched = await mapper.get({ item: toFetch });
     return createOkResponse('detail', fetched);
+  } catch (error) {
+    return createErrorResponse(error);
+  }
+};
+
+export const list: APIGatewayProxyHandler = async (event) => {
+  try {
+    const iterator = mapper.query(
+      DogNotice,
+      { type: 'found', createdAt: greaterThan(0) },
+      { indexName: 'type-createdAt-index' },
+    );
+    const items = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const item of iterator) {
+      items.push(item);
+    }
+    return createOkResponse('list', items);
   } catch (error) {
     return createErrorResponse(error);
   }

@@ -115,6 +115,12 @@ functions:
       - http:
           method: get
           path: found-dog/{id}
+  foundDogList:
+    handler: src/handlers/foundDog.list
+    events:
+      - http:
+          method: get
+          path: found-dog
   lostDogCreate:
     handler: src/handlers/lostDog.create
     events:
@@ -139,6 +145,12 @@ functions:
       - http:
           method: get
           path: lost-dog/{id}
+  lostDogList:
+    handler: src/handlers/lostDog.list
+    events:
+      - http:
+          method: get
+          path: lost-dog
   imageUpload:
     handler: src/handlers/images.upload
     events:
