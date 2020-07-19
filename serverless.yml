@@ -65,6 +65,8 @@ resources:
             AttributeType: "S"
           - AttributeName: "type"
             AttributeType: "S"
+          - AttributeName: "createdAt"
+            AttributeType: "N"
         KeySchema:
           - AttributeName: "id"
             KeyType: "HASH"
@@ -73,18 +75,18 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        # GlobalSecondaryIndexes:
-        #   - IndexName: "type-createdAt-index"
-        #     KeySchema:
-        #       - AttributeName: "type"
-        #         KeyType: "HASH"
-        #       - AttributeName: "createdAt"
-        #         KeyType: "RANGE"
-        #     Projection:
-        #       ProjectionType: "ALL"
-        #     ProvisionedThroughput:
-        #       ReadCapacityUnits: 1
-        #       WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: "type-createdAt-index"
+            KeySchema:
+              - AttributeName: "type"
+                KeyType: "HASH"
+              - AttributeName: "createdAt"
+                KeyType: "RANGE"
+            Projection:
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
                 
         TableName: ${self:provider.environment.DB_NAME}
 
@@ -137,3 +139,9 @@ functions:
       - http:
           method: get
           path: lost-dog/{id}
+  imageUpload:
+    handler: src/handlers/images.upload
+    events:
+      - http:
+          path: upload
+          method: get
