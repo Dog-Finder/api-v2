@@ -18,6 +18,7 @@ export const del: APIGatewayProxyHandler = async (event) => {
   try {
     const toFetch = new DogNotice();
     toFetch.id = event.pathParameters.id;
+    toFetch.type = 'found';
     const fetched = await mapper.get({ item: toFetch });
     await mapper.delete({ item: fetched });
     return createOkResponse('delete', {});
@@ -31,6 +32,7 @@ export const edit: APIGatewayProxyHandler = async (event) => {
     const requestBody = JSON.parse(event.body);
     const toFetch = new DogNotice();
     toFetch.id = event.pathParameters.id;
+    toFetch.type = 'found';
     const fetched = await mapper.get({ item: toFetch });
     const newNotice = Object.assign(fetched, requestBody);
     newNotice.id = toFetch.id; // Keep old id
@@ -45,6 +47,7 @@ export const detail: APIGatewayProxyHandler = async (event) => {
   try {
     const toFetch = new DogNotice();
     toFetch.id = event.pathParameters.id;
+    toFetch.type = 'found';
     const fetched = await mapper.get({ item: toFetch });
     return createOkResponse('detail', fetched);
   } catch (error) {

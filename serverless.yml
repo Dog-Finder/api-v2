@@ -1,32 +1,6 @@
 service:
   name: api-ts
 
-custom:
-  webpack:
-    webpackConfig: ./webpack.config.js
-    includeModules: true
-  serverless-iam-roles-per-function:
-    defaultInherit: true # Each function will inherit the service level roles too.
-  prune: # automatically prune old lambda versions
-    automatic: true
-    number: 3
-  dynamodb:
-    start:
-      migrate: true
-      seed: true
-    stages:
-      - local
-  endpoints:
-    dynamodb-local: 'http://localhost:8000'
-
-# Add the serverless-webpack plugin
-plugins:
-  - serverless-offline
-  - serverless-webpack
-  - serverless-iam-roles-per-function
-  - serverless-prune-plugin
-  - serverless-dynamodb-local
-
 provider:
   name: aws
   runtime: nodejs12.x
@@ -50,6 +24,37 @@ provider:
         - xray:PutTelemetryRecords
       Resource: "*"
 
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+  serverless-iam-roles-per-function:
+    defaultInherit: true # Each function will inherit the service level roles too.
+  prune: # automatically prune old lambda versions
+    automatic: true
+    number: 3
+  dynamodb:
+    start:
+      migrate: true
+      seed: true
+    stages:
+      - local
+    seed:
+      local:
+        sources:
+          - table: ${self:provider.environment.DB_NAME}
+            sources: [./seeds/notices.json]
+  endpoints:
+    dynamodb-local: 'http://localhost:8000'
+
+# Add the serverless-webpack plugin
+plugins:
+  - serverless-offline
+  - serverless-webpack
+  - serverless-iam-roles-per-function
+  - serverless-prune-plugin
+  - serverless-dynamodb-local
+
 resources:
   Resources:
     DynamoDbTable:
@@ -58,9 +63,13 @@ resources:
         AttributeDefinitions:
           - AttributeName: "id"
             AttributeType: "S"
+          - AttributeName: "type"
+            AttributeType: "S"
         KeySchema:
           - AttributeName: "id"
             KeyType: "HASH"
+          - AttributeName: "type"
+            KeyType: "RANGE"
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
@@ -104,3 +113,27 @@ functions:
       - http:
           method: get
           path: found-dog/{id}
+  lostDogCreate:
+    handler: src/handlers/lostDog.create
+    events:
+      - http:
+          method: post
+          path: lost-dog
+  lostDogDelete:
+    handler: src/handlers/lostDog.del
+    events:
+      - http:
+          method: delete
+          path: lost-dog/{id}
+  lostDogEdit:
+    handler: src/handlers/lostDog.edit
+    events:
+      - http:
+          method: put
+          path: lost-dog/{id}
+  lostDogDetail:
+    handler: src/handlers/lostDog.detail
+    events:
+      - http:
+          method: get
+          path: lost-dog/{id}
