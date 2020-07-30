@@ -33,7 +33,7 @@ export class DogNotice {
     imageLinks?: string;
 
     @attribute()
-    commentary?: boolean;
+    commentary?: string;
 
     @attribute()
     marker?: Marker
