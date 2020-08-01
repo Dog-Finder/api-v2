@@ -18,7 +18,7 @@ provider:
     DB_NAME: dog-finder-db
     CONFIG_DYNAMODB_ENDPOINT: ${self:custom.endpoints.dynamodb-local}
     JWT_SECRET: secret
-    
+
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -65,6 +65,10 @@ plugins:
   - serverless-prune-plugin
 
 functions:
+
+  authorize:
+    handler: src/handlers/authorize.authorize
+
   foundDogCreate:
     handler: src/handlers/foundDog.create
     events:
@@ -145,6 +149,7 @@ functions:
       - http:
           path: user/{email}
           method: get
+          authorizer: authorize
 
   userLogin:
     handler: src/handlers/users.login

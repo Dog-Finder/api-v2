@@ -53,7 +53,7 @@ export const login: APIGatewayProxyHandler = async (event) => {
     const { user } = fetched;
     const correctPassword = await bcrypt.compare(password, user.password);
     const token = jwt.sign(
-      { user: _.omit(user, 'password'); },
+      { user: _.omit(user, 'password') },
       process.env.JWT_SECRET,
       {
         expiresIn: JWT_EXPIRATION_TIME,
