@@ -17,6 +17,8 @@ provider:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
     DB_NAME: dog-finder-db
     CONFIG_DYNAMODB_ENDPOINT: ${self:custom.endpoints.dynamodb-local}
+    JWT_SECRET: secret
+    
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -129,3 +131,25 @@ functions:
       - http:
           path: upload
           method: get
+
+  userCreate:
+    handler: src/handlers/users.create
+    events:
+      - http:
+          path: sign-up
+          method: post
+  
+  userDetail:
+    handler: src/handlers/users.detail
+    events:
+      - http:
+          path: user/{email}
+          method: get
+
+  userLogin:
+    handler: src/handlers/users.login
+    events:
+      - http:
+          path: log-in
+          method: post
+

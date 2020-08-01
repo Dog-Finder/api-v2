@@ -1,7 +1,7 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { greaterThan } from '@aws/dynamodb-expressions';
 import mapper from '@src/db_config';
-import { createDogNotice, DogNotice } from '@src/models/dog-notice';
+import { createDogNotice, DogNotice } from '@src/models/notice';
 import { createOkResponse, createErrorResponse } from '@src/handlers/utils';
 
 export const create: APIGatewayProxyHandler = async (event) => {

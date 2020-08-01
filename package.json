@@ -14,7 +14,10 @@
     "@aws/dynamodb-expressions": "^0.7.3",
     "aws-lambda": "^1.0.6",
     "aws-sdk": "^2.715.0",
+    "bcrypt": "^5.0.0",
     "bluebird": "^3.7.2",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.19",
     "source-map-support": "^0.5.10",
     "uuid": "^8.2.0"
   },

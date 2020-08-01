@@ -22,7 +22,7 @@ custom:
   dynamodb:
     start:
       migrate: true
-      seed: true
+      seed: false
     stages:
       - dev
     seed:
@@ -44,6 +44,8 @@ resources:
         AttributeDefinitions:
           - AttributeName: "id"
             AttributeType: "S"
+          - AttributeName: "entry"
+            AttributeType: "S"
           - AttributeName: "type"
             AttributeType: "S"
           - AttributeName: "createdAt"
@@ -51,7 +53,7 @@ resources:
         KeySchema:
           - AttributeName: "id"
             KeyType: "HASH"
-          - AttributeName: "type"
+          - AttributeName: "entry"
             KeyType: "RANGE"
         ProvisionedThroughput:
           ReadCapacityUnits: 1
