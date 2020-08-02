@@ -22,7 +22,7 @@ custom:
   dynamodb:
     start:
       migrate: true
-      seed: false
+      seed: true
     stages:
       - dev
       - staging
@@ -50,7 +50,7 @@ resources:
           - AttributeName: "type"
             AttributeType: "S"
           - AttributeName: "createdAt"
-            AttributeType: "N"
+            AttributeType: "S"
         KeySchema:
           - AttributeName: "id"
             KeyType: "HASH"
