@@ -83,7 +83,7 @@ export const list: APIGatewayProxyHandler = async () => {
   try {
     const iterator = dynamodb.query(
       DogFinderObject,
-      { type: 'found', createdAt: greaterThan(0) },
+      { type: 'found', createdAt: greaterThan('0000') },
       { indexName: 'type-createdAt-index' },
     );
     const items = [];
