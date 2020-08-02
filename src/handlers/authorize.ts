@@ -9,7 +9,12 @@ import { createErrorResponse } from '@src/handlers/utils';
 // };
 
 const buildIAMPolicy = (userId, effect, resource, context) => {
-  // console.log(`buildIAMPolicy ${userId} ${effect} ${resource}`)
+  let path = resource;
+  const arn = resource.split('/');
+  if (arn.length > 4) {
+    const base = arn.slice(0, -1);
+    path = `${base.join('/')}/*`;
+  }
   const policy = {
     principalId: userId,
     policyDocument: {
@@ -18,7 +23,7 @@ const buildIAMPolicy = (userId, effect, resource, context) => {
         {
           Action: 'execute-api:Invoke',
           Effect: effect,
-          Resource: resource,
+          Resource: path,
         },
       ],
     },
