@@ -1,13 +1,12 @@
-import { APIGatewayProxyHandler } from 'aws-lambda';
 import jwt from 'jsonwebtoken';
-import _ from 'lodash';
+// import _ from 'lodash';
 
-import { createOkResponse, createErrorResponse } from '@src/handlers/utils';
+import { createErrorResponse } from '@src/handlers/utils';
 
-const authorizeUser = (userScopes, resourcePath) => {
-  const hasValidScope = _.some(userScopes, (scope) => _.startsWith(resourcePath, `/${scope}`));
-  return hasValidScope;
-};
+// const authorizeUser = (userScopes, resourcePath) => {
+//   const hasValidScope = _.some(userScopes, (scope) => _.startsWith(resourcePath, `/${scope}`));
+//   return hasValidScope;
+// };
 
 const buildIAMPolicy = (userId, effect, resource, context) => {
   // console.log(`buildIAMPolicy ${userId} ${effect} ${resource}`)
@@ -29,7 +28,7 @@ const buildIAMPolicy = (userId, effect, resource, context) => {
   return policy;
 };
 
-export const authorize: APIGatewayProxyHandler = async (event) => {
+export const authorize = async (event) => {
   const header = event.authorizationToken;
   try {
     const bearer = header.split(' ');

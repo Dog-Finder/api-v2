@@ -6,6 +6,9 @@ import Address from '@src/models/address';
 
 export class DogNotice {
     @attribute()
+    id?: string;
+
+    @attribute()
     name?: string;
 
     @attribute()
@@ -42,10 +45,8 @@ interface BodyData {
   imageLinks?: string
 }
 
-export function createDogNotice(data: BodyData, type : string): DogNotice {
+export function createDogNotice(data: BodyData): DogNotice {
   const notice = Object.assign(new DogNotice(), {
-    type,
-    createdAt: new Date(),
     name: data.name,
     date: data.date,
     sex: data.sex,

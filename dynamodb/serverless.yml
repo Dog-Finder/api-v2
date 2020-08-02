@@ -5,10 +5,10 @@ provider:
   name: aws
   runtime: nodejs12.x
   frameworkVersion: '1.75.1'
-  stage: 'dev'
+  stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
   environment:
-    DB_NAME: dog-finder-db
+    DB_NAME: dog-finder-db-${self:provider.stage}
     CONFIG_DYNAMODB_ENDPOINT: ${self:custom.endpoints.dynamodb-local}
   iamRoleStatements:
     - Effect: Allow

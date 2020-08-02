@@ -49,9 +49,12 @@ export const login: APIGatewayProxyHandler = async (event) => {
     const item = new DogFinderObject();
     item.id = `user#${email}`;
     item.entry = 'metadata';
-    const fetched = await dynamodb.get({ item });
+    const fetched = await dynamodb.get(item);
     const { user } = fetched;
     const correctPassword = await bcrypt.compare(password, user.password);
+    if (!correctPassword) {
+      return createErrorResponse('Wrong Password');
+    }
     const token = jwt.sign(
       { user: _.omit(user, 'password') },
       process.env.JWT_SECRET,
