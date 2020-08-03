@@ -15,6 +15,8 @@ const buildIAMPolicy = (userId, effect, resource, context) => {
     const base = arn.slice(0, -1);
     path = `${base.join('/')}/*`;
   }
+  console.log(path);
+
   const policy = {
     principalId: userId,
     policyDocument: {
@@ -23,7 +25,7 @@ const buildIAMPolicy = (userId, effect, resource, context) => {
         {
           Action: 'execute-api:Invoke',
           Effect: effect,
-          Resource: path,
+          Resource: '*',
         },
       ],
     },
