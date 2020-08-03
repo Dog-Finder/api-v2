@@ -1,4 +1,5 @@
 import * as faker from 'faker';
+import bcrypt from 'bcryptjs';
 import { v1 as uuid } from 'uuid';
 import fs from 'fs';
 import DogFinderObject from '@src/models/table';
@@ -7,18 +8,31 @@ import { DogNotice } from '@src/models/notice';
 
 function createUsers(n: number): Array<DogFinderObject> {
   const users = [];
+
+  const tester: DogFinderObject = {
+    id: 'user#tester@gmail.com',
+    entry: 'metadata',
+    type: 'user',
+    createdAt: (new Date()).toISOString(),
+    user: {
+      name: 'Tester',
+      email: 'tester@gmail.com',
+      password: bcrypt.hashSync('1234', 10),
+    },
+  };
+  users.push(tester);
+
   for (let i = 0; i < n; i += 1) {
     const user: User = {
       name: faker.name.findName(),
       email: faker.internet.email(),
       password: '1234',
-
     };
     const entry: DogFinderObject = {
       id: `user#${user.email}`,
       entry: 'metadata',
       type: 'user',
-      createdAt: new Date(),
+      createdAt: (new Date()).toISOString(),
       user,
     };
     users.push(entry);
@@ -53,7 +67,7 @@ function createLostDogs(n: number, user: User): Array<DogFinderObject> {
       id: `user#${user.email}`,
       entry: `lost#${id}`,
       type: 'lost',
-      createdAt: new Date(),
+      createdAt: (new Date()).toISOString(),
       notice,
     };
     lostDogs.push(entry);
@@ -88,7 +102,7 @@ function createFoundDogs(n: number, user: User): Array<DogFinderObject> {
       id: `user#${user.email}`,
       entry: `found#${id}`,
       type: 'found',
-      createdAt: new Date(),
+      createdAt: (new Date()).toISOString(),
       notice,
     };
     foundDogs.push(entry);

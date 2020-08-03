@@ -18,7 +18,7 @@ export default class DogFinderObject {
     entry: string;
 
     @attribute()
-    createdAt: Date;
+    createdAt: string;
 
     @attribute() // Type of entry (user, lost, found)
     type?: string;

@@ -18,7 +18,7 @@ export const create: APIGatewayProxyHandler = async (event) => {
       id: `user#${email}`,
       entry: `lost#${noticeId}`,
       type: 'lost',
-      createdAt: new Date(),
+      createdAt: (new Date()).toISOString(),
       notice,
     });
     await dynamodb.put(item);
