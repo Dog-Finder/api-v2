@@ -1,15 +1,28 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { greaterThan } from '@aws/dynamodb-expressions';
-import mapper from '@src/db_config';
-import { createDogNotice, DogNotice } from '@src/models/dog-notice';
+import { v1 as uuid } from 'uuid';
+
+import dynamodb from '@src/db_config';
+import DogFinderObject from '@src/models/table';
+import { createDogNotice, DogNotice } from '@src/models/notice';
 import { createOkResponse, createErrorResponse } from '@src/handlers/utils';
 
 export const create: APIGatewayProxyHandler = async (event) => {
   try {
+    const email = event.requestContext.authorizer.principalId;
     const requestBody = JSON.parse(event.body);
-    const notice: DogNotice = createDogNotice(requestBody, 'lost');
-    await mapper.put({ item: notice });
-    return createOkResponse('create', notice);
+    const notice: DogNotice = createDogNotice(requestBody);
+    const noticeId = uuid();
+    notice.id = noticeId;
+    const item = Object.assign(new DogFinderObject(), {
+      id: `user#${email}`,
+      entry: `lost#${noticeId}`,
+      type: 'lost',
+      createdAt: (new Date()).toISOString(),
+      notice,
+    });
+    await dynamodb.put(item);
+    return createOkResponse('create', item);
   } catch (error) {
     return createErrorResponse(error);
   }
@@ -17,11 +30,14 @@ export const create: APIGatewayProxyHandler = async (event) => {
 
 export const del: APIGatewayProxyHandler = async (event) => {
   try {
-    const toFetch = new DogNotice();
-    toFetch.id = event.pathParameters.id;
-    toFetch.type = 'lost';
-    const fetched = await mapper.get({ item: toFetch });
-    await mapper.delete({ item: fetched });
+    const email = event.requestContext.authorizer.principalId;
+    const noticeId = event.pathParameters.id;
+    const item = Object.assign(new DogFinderObject(), {
+      id: `user#${email}`,
+      entry: `lost#${noticeId}`,
+    });
+    const fetched = await dynamodb.get(item);
+    await dynamodb.delete({ item: fetched });
     return createOkResponse('delete', {});
   } catch (error) {
     return createErrorResponse(error);
@@ -31,14 +47,18 @@ export const del: APIGatewayProxyHandler = async (event) => {
 export const edit: APIGatewayProxyHandler = async (event) => {
   try {
     const requestBody = JSON.parse(event.body);
-    const toFetch = new DogNotice();
-    toFetch.id = event.pathParameters.id;
-    toFetch.type = 'lost';
-    const fetched = await mapper.get({ item: toFetch });
-    const newNotice = Object.assign(fetched, requestBody);
-    newNotice.id = toFetch.id; // Keep old id
-    await mapper.put({ item: newNotice });
-    return createOkResponse('edit', newNotice);
+    const email = event.requestContext.authorizer.principalId;
+    const noticeId = event.pathParameters.id;
+    const item = Object.assign(new DogFinderObject(), {
+      id: `user#${email}`,
+      entry: `lost#${noticeId}`,
+    });
+    const fetched = await dynamodb.get(item);
+    const { notice } = fetched;
+    const newNotice = Object.assign(notice, requestBody);
+    fetched.notice = newNotice;
+    await dynamodb.put(fetched);
+    return createOkResponse('edit', fetched);
   } catch (error) {
     return createErrorResponse(error);
   }
@@ -46,10 +66,13 @@ export const edit: APIGatewayProxyHandler = async (event) => {
 
 export const detail: APIGatewayProxyHandler = async (event) => {
   try {
-    const toFetch = new DogNotice();
-    toFetch.id = event.pathParameters.id;
-    toFetch.type = 'lost';
-    const fetched = await mapper.get({ item: toFetch });
+    const email = event.requestContext.authorizer.principalId;
+    const noticeId = event.pathParameters.id;
+    const item = Object.assign(new DogFinderObject(), {
+      id: `user#${email}`,
+      entry: `lost#${noticeId}`,
+    });
+    const fetched = await dynamodb.get(item);
     return createOkResponse('detail', fetched);
   } catch (error) {
     return createErrorResponse(error);
@@ -58,15 +81,15 @@ export const detail: APIGatewayProxyHandler = async (event) => {
 
 export const list: APIGatewayProxyHandler = async () => {
   try {
-    const iterator = mapper.query(
-      DogNotice,
-      { type: 'lost', createdAt: greaterThan(0) },
+    const iterator = dynamodb.query(
+      DogFinderObject,
+      { type: 'lost', createdAt: greaterThan('0000') },
       { indexName: 'type-createdAt-index' },
     );
     const items = [];
     // eslint-disable-next-line no-restricted-syntax
     for await (const item of iterator) {
-      items.push(item);
+      items.push(item.notice);
     }
     return createOkResponse('list', items);
   } catch (error) {

@@ -5,8 +5,8 @@ provider:
   name: aws
   runtime: nodejs12.x
   frameworkVersion: '1.75.1'
-  stage: ${opt:stage, 'local'}
-  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'staging'}
+  region: 'us-east-1'
   apiGateway:
     minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
   tracing:
@@ -15,8 +15,10 @@ provider:
     DEBUG: '*'
     NODE_ENV: ${self:provider.stage}
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
-    DB_NAME: dog-finder-db
+    DB_NAME: dog-finder-db-${self:provider.stage}
     CONFIG_DYNAMODB_ENDPOINT: ${self:custom.endpoints.dynamodb-local}
+    JWT_SECRET: secret
+
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -31,12 +33,12 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:us-east-1:983570756921:table/dog-finder-db"
+      Resource: "arn:aws:dynamodb:us-east-1:983570756921:table/${self:provider.environment.DB_NAME}"
     - Effect: Allow
       Action:
         - dynamodb:Query
         - dynamodb:Scan
-      Resource: "arn:aws:dynamodb:us-east-1:983570756921:table/dog-finder-db/index/*"
+      Resource: "arn:aws:dynamodb:us-east-1:983570756921:table/${self:provider.environment.DB_NAME}/index/*"
     - Effect: Allow
       Action:
         - s3:PutObject
@@ -55,7 +57,6 @@ custom:
   endpoints:
     dynamodb-local: 'http://localhost:8000'
 
-# Add the serverless-webpack plugin
 plugins:
   - serverless-offline
   - serverless-webpack
@@ -63,69 +64,107 @@ plugins:
   - serverless-prune-plugin
 
 functions:
+
+  authorize:
+    handler: src/handlers/authorize.authorize
+
   foundDogCreate:
     handler: src/handlers/foundDog.create
     events:
       - http:
           method: post
           path: found-dog
+          authorizer: authorize
+
   foundDogDelete:
     handler: src/handlers/foundDog.del
     events:
       - http:
           method: delete
           path: found-dog/{id}
+          authorizer: authorize
   foundDogEdit:
     handler: src/handlers/foundDog.edit
     events:
       - http:
           method: put
           path: found-dog/{id}
+          authorizer: authorize
   foundDogDetail:
     handler: src/handlers/foundDog.detail
     events:
       - http:
           method: get
           path: found-dog/{id}
+          authorizer: authorize
   foundDogList:
     handler: src/handlers/foundDog.list
     events:
       - http:
           method: get
           path: found-dog
+          authorizer: authorize
   lostDogCreate:
     handler: src/handlers/lostDog.create
     events:
       - http:
           method: post
           path: lost-dog
+          authorizer: authorize
   lostDogDelete:
     handler: src/handlers/lostDog.del
     events:
       - http:
           method: delete
           path: lost-dog/{id}
+          authorizer: authorize
   lostDogEdit:
     handler: src/handlers/lostDog.edit
     events:
       - http:
           method: put
           path: lost-dog/{id}
+          authorizer: authorize
   lostDogDetail:
     handler: src/handlers/lostDog.detail
     events:
       - http:
           method: get
           path: lost-dog/{id}
+          authorizer: authorize
   lostDogList:
     handler: src/handlers/lostDog.list
     events:
       - http:
           method: get
           path: lost-dog
+          authorizer: authorize
   imageUpload:
     handler: src/handlers/images.upload
     events:
       - http:
           path: upload
           method: get
+
+  userCreate:
+    handler: src/handlers/users.create
+    events:
+      - http:
+          path: sign-up
+          method: post
+  
+  userDetail:
+    handler: src/handlers/users.detail
+    events:
+      - http:
+          path: user/{email}
+          method: get
+          authorizer: authorize
+
+  userLogin:
+    handler: src/handlers/users.login
+    events:
+      - http:
+          path: log-in
+          method: post
+

@@ -13,9 +13,9 @@ export function createOkResponse(action: string, resource: any): returnType {
   });
 }
 
-export function createErrorResponse(error: any): returnType {
+export function createErrorResponse(error: any, statusCode = 500): returnType {
   return ({
-    statusCode: 500,
+    statusCode,
     body: JSON.stringify({
       error,
     }),

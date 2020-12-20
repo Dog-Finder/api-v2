@@ -11,3 +11,4 @@ dynamodb/.dynamodb
 
 # Other
 .eslintcache
+.DS_Store

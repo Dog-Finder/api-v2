@@ -17,5 +17,5 @@ if (IS_OFFLINE === 'true') {
 } else {
   client = new DynamoDB();
 }
-const mapper = new DataMapper({ client });
-export default mapper;
+const dynamodb = new DataMapper({ client });
+export default dynamodb;
