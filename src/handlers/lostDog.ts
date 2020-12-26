@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { greaterThan } from '@aws/dynamodb-expressions';
+import { greaterThan, beginsWith } from '@aws/dynamodb-expressions';
 import { v1 as uuid } from 'uuid';
 
 import dynamodb from '@src/db_config';
@@ -85,6 +85,27 @@ export const list: APIGatewayProxyHandler = async () => {
       DogFinderObject,
       { type: 'lost', createdAt: greaterThan('0000') },
       { indexName: 'type-createdAt-index' },
+    );
+    const items = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const item of iterator) {
+      items.push(item.notice);
+    }
+    return createOkResponse('list', items);
+  } catch (error) {
+    return createErrorResponse(error);
+  }
+};
+
+export const userList: APIGatewayProxyHandler = async (event) => {
+  const email = event.requestContext.authorizer.principalId;
+  try {
+    const iterator = dynamodb.query(
+      DogFinderObject,
+      {
+        id: `user#${email}`,
+        entry: beginsWith('lost'),
+      },
     );
     const items = [];
     // eslint-disable-next-line no-restricted-syntax
