@@ -104,6 +104,15 @@ functions:
           method: get
           path: found-dog
           authorizer: authorize
+
+  foundDogUserList:
+    handler: src/handlers/foundDog.userList
+    events:
+      - http:
+          method: get
+          path: found-dog/user
+          authorizer: authorize
+
   lostDogCreate:
     handler: src/handlers/lostDog.create
     events:
@@ -139,6 +148,15 @@ functions:
           method: get
           path: lost-dog
           authorizer: authorize
+
+  lostDogUserList:
+    handler: src/handlers/lostDog.userList
+    events:
+      - http:
+          method: get
+          path: lost-dog/user
+          authorizer: authorize
+
   imageUpload:
     handler: src/handlers/images.upload
     events:
