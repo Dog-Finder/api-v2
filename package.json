@@ -6,7 +6,8 @@
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/.bin/jest --ci --verbose",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "buildtest": "tsc --noEmit"
+    "buildtest": "tsc --noEmit",
+    "local": "asdf"
   },
   "dependencies": {
     "@aws/dynamodb-data-mapper": "^0.7.3",
@@ -42,7 +43,7 @@
     "jest": "^26.1.0",
     "serverless-dynamodb-local": "^0.2.39",
     "serverless-iam-roles-per-function": "^2.0.2",
-    "serverless-offline": "^6.5.0",
+    "serverless-offline": "^6.8.0",
     "serverless-plugin-include-dependencies": "^4.1.0",
     "serverless-prune-plugin": "^1.4.3",
     "serverless-webpack": "^5.2.0",

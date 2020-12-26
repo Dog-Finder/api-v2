@@ -2091,6 +2091,21 @@ aws-sdk@*, aws-sdk@^2.7.0, aws-sdk@^2.715.0:
     uuid "3.3.2"
     xml2js "0.4.19"
 
+aws-sdk@^2.624.0:
+  version "2.817.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.817.0.tgz#3a97b690b0ec494cf8ee927affb3973cf26abcc8"
+  integrity sha512-DZIdWpkcqbqsCz0MEskHsyFaqc6Tk9XIFqXAg1AKHbOgC8nU45bz+Y2osX77pU01JkS/G7OhGtGmlKDrOPvFwg==
+  dependencies:
+    buffer "4.9.2"
+    events "1.1.1"
+    ieee754 "1.1.13"
+    jmespath "0.15.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    uuid "3.3.2"
+    xml2js "0.4.19"
+
 aws-sign2@~0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.7.0.tgz#b46e890934a9591f2d2f6f86d7e6a9f1b3fe76a8"
@@ -7046,14 +7061,15 @@ serverless-iam-roles-per-function@^2.0.2:
   dependencies:
     lodash "^4.17.15"
 
-serverless-offline@^6.5.0:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/serverless-offline/-/serverless-offline-6.5.0.tgz#13d87eac1fae6fe6543ce0545d91062267262e20"
-  integrity sha512-BTNI68Tfl5zahsqDV6WBGJ7Mj57C7EaMNFzs9u/SBafOnQPKpk6dyNi2qDNCol/W8F3zIlEdADjWtDZPr8PR7g==
+serverless-offline@^6.8.0:
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/serverless-offline/-/serverless-offline-6.8.0.tgz#65d2192e41ef87ebcbc1093108db6a25059d6ab5"
+  integrity sha512-DBDMcU58Bl+zZGSTAZ96Ed57k11oh0fQwgSoH2iVJpO6xFV9dTIttBYzTCwnfAgG0kB6NZK99Q/69b4brChTnQ==
   dependencies:
     "@hapi/boom" "^7.4.11"
     "@hapi/h2o2" "^8.3.2"
     "@hapi/hapi" "^18.4.1"
+    aws-sdk "^2.624.0"
     boxen "^4.2.0"
     chalk "^3.0.0"
     cuid "^2.1.8"

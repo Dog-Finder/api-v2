@@ -4,7 +4,6 @@ service:
 provider:
   name: aws
   runtime: nodejs12.x
-  frameworkVersion: '1.75.1'
   stage: ${opt:stage, 'staging'}
   region: ${opt:region, 'us-east-1'}
   environment:

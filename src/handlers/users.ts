@@ -42,7 +42,7 @@ export const create: APIGatewayProxyHandler = async (event) => {
 
 export const detail: APIGatewayProxyHandler = async (event) => {
   try {
-    const { email } = event.pathParameters;
+    const email = event.requestContext.authorizer.principalId;
     const item = new DogFinderObject();
     item.id = `user#${email}`;
     item.entry = 'metadata';

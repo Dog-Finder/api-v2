@@ -157,7 +157,7 @@ functions:
     handler: src/handlers/users.detail
     events:
       - http:
-          path: user/{email}
+          path: user
           method: get
           authorizer: authorize
 
