@@ -1,9 +1,12 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { S3 } from 'aws-sdk';
 import { v1 as uuid } from 'uuid';
-import { createErrorResponse } from '@src/handlers/utils';
+import { createOkResponse, createErrorResponse } from '@src/handlers/utils';
+import axios from 'axios';
 
 const s3 = new S3({ signatureVersion: 'v4' });
+// const modelApi = 'http://visual-embedding-api-dev.us-east-1.elasticbeanstalk.com';
+const modelApi = 'http://127.0.0.1:5000';
 
 export const upload: APIGatewayProxyHandler = async () => {
   try {
@@ -20,6 +23,21 @@ export const upload: APIGatewayProxyHandler = async () => {
         imageLink: `https://dog-finder-images.s3.amazonaws.com/${Key}`,
       }),
     });
+  } catch (error) {
+    return createErrorResponse(error);
+  }
+};
+
+export const uploadVector: APIGatewayProxyHandler = async (event) => {
+  try {
+    const requestBody = JSON.parse(event.body);
+    const { imageLink, userId, entryId } = requestBody;
+    const response = await axios.post(`${modelApi}/predict-save`, {
+      imageLink,
+      userId,
+      entryId,
+    });
+    return createOkResponse('create', response.data);
   } catch (error) {
     return createErrorResponse(error);
   }
