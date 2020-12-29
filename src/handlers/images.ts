@@ -5,8 +5,8 @@ import { createOkResponse, createErrorResponse } from '@src/handlers/utils';
 import axios from 'axios';
 
 const s3 = new S3({ signatureVersion: 'v4' });
-// const modelApi = 'http://visual-embedding-api-dev.us-east-1.elasticbeanstalk.com';
-const modelApi = 'http://127.0.0.1:5000';
+const modelApi = 'http://visual-embedding-api-dev.us-east-1.elasticbeanstalk.com';
+// const modelApi = 'http://127.0.0.1:5000';
 
 export const upload: APIGatewayProxyHandler = async () => {
   try {
