@@ -6,6 +6,9 @@ on:
       - dev
       - staging
       - master
+    paths-ignore:
+    - 'dynamodb/**'
+    - '**.md'
 
 
 jobs:
