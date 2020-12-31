@@ -1,0 +1,41 @@
+name: Serverless Deploy
+
+on:
+  push:
+    branches:
+      - dev
+      - staging
+      - master
+    paths-ignore:
+    - 'dynamodb/**'
+    - '**.md'
+
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Get Branch name
+      run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+    - name: Install dependecies
+      run: yarn install --frozen-lockfile
+
+    - name: Serverless Deploy
+      uses: serverless/github-action@master
+      with:
+        args: deploy --stage ${{ env.BRANCH }}
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

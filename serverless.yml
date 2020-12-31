@@ -5,7 +5,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   frameworkVersion: '1.75.1'
-  stage: ${opt:stage, 'staging'}
+  stage: ${opt:stage, 'dev'}
   region: 'us-east-1'
   apiGateway:
     minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
@@ -163,6 +163,13 @@ functions:
       - http:
           path: upload
           method: get
+
+  vectorUpload:
+    handler: src/handlers/images.uploadVector
+    events:
+      - http:
+          path: upload-vector
+          method: post
 
   userCreate:
     handler: src/handlers/users.create
