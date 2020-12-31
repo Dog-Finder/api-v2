@@ -1,9 +1,8 @@
-name: Deploy Branch With Serverless
+name: Serverless Deploy
 
 on:
   push:
     branches:
-      - feat/serverless-github-actions
       - dev
       - staging
       - master
@@ -11,22 +10,29 @@ on:
 
 jobs:
   deploy:
-    name: deploy
+    name: Deploy
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [12.x]
     steps:
     - uses: actions/checkout@v2
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn install --frozen-lockfile
-    - name: serverless deploy
+
+    - name: Get Branch name
+      run: echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+    - name: Install dependecies
+      run: yarn install --frozen-lockfile
+
+    - name: Serverless Deploy
       uses: serverless/github-action@master
       with:
-        args: deploy --stage development
+        args: deploy --stage ${{ env.BRANCH }}
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
