@@ -1,0 +1,32 @@
+name: Deploy Branch With Serverless
+
+on:
+  push:
+    branches:
+      - feat/serverless-github-actions
+      - dev
+      - staging
+      - master
+
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - name: serverless deploy
+      uses: serverless/github-action@master
+      with:
+        args: deploy --stage development
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
