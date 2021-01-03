@@ -193,3 +193,10 @@ functions:
           path: log-in
           method: post
 
+  searchKNN:
+    handler: src/handlers/search.search
+    events:
+      - http:
+          path: search
+          method: post
+          authorizer: authorize
