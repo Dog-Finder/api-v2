@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
-const modelApi = 'http://visual-embedding-api-dev.us-east-1.elasticbeanstalk.com';
-// const modelApi = 'http://127.0.0.1:5000';
+// const modelApi = 'http://visual-embedding-api-dev.us-east-1.elasticbeanstalk.com';
+const modelApi = 'http://127.0.0.1:5000';
 type vectorData = { imageLink: string, userId: string, entryId: string}
 
 export function vectorizeImage(data: vectorData): Promise<AxiosResponse> {

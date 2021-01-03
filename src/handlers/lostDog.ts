@@ -6,6 +6,7 @@ import dynamodb from '@src/db_config';
 import DogFinderObject from '@src/models/table';
 import { createDogNotice, DogNotice } from '@src/models/notice';
 import { createOkResponse, createErrorResponse } from '@src/handlers/utils';
+import { vectorizeImage } from '@src/common/vectors';
 
 export const create: APIGatewayProxyHandler = async (event) => {
   try {
@@ -22,6 +23,13 @@ export const create: APIGatewayProxyHandler = async (event) => {
       notice,
     });
     await dynamodb.put(item);
+    if (notice.imageLinks) {
+      await vectorizeImage({
+        imageLink: notice.imageLinks,
+        entryId: item.entry,
+        userId: item.id,
+      });
+    }
     return createOkResponse('create', item);
   } catch (error) {
     return createErrorResponse(error);
