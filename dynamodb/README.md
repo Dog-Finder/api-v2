@@ -19,3 +19,8 @@ Seed DB
 ```
 sls dynamodb seed --online --region us-east-1 --stage [stage]
 ```
+
+Upload images to S3
+```
+aws s3 cp SOURCE_DIR s3://dog-finder-images/ --recursive
+```
