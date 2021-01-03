@@ -33,6 +33,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
+        - dynamodb:BatchGetItem
       Resource: "arn:aws:dynamodb:us-east-1:983570756921:table/${self:provider.environment.DB_NAME}"
     - Effect: Allow
       Action:
