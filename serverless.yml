@@ -195,6 +195,14 @@ functions:
           path: log-in
           method: post
 
+  userRestore:
+    handler: src/handlers/users.restore
+    events:
+      - http:
+          path: restore
+          method: post
+          authorizer: authorize
+
   searchKNN:
     handler: src/handlers/search.search
     events:
