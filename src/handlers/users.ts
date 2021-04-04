@@ -78,3 +78,24 @@ export const login: APIGatewayProxyHandler = async (event) => {
     return createErrorResponse(error);
   }
 };
+
+export const restore: APIGatewayProxyHandler = async (event) => {
+  try {
+    const email = event.requestContext.authorizer.principalId;
+    const item = new DogFinderObject();
+    item.id = `user#${email}`;
+    item.entry = 'metadata';
+    const fetched = await dynamodb.get(item);
+    const { user } = fetched;
+    const token = jwt.sign(
+      { user: _.omit(user, 'password') },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: JWT_EXPIRATION_TIME,
+      },
+    );
+    return createOkResponse('create', token);
+  } catch (error) {
+    return createErrorResponse(error);
+  }
+};

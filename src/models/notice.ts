@@ -28,6 +28,9 @@ export class DogNotice {
 
     @attribute()
     address?: Address
+
+    @attribute()
+    score?: number
 }
 
 interface BodyData {

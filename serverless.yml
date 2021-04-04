@@ -7,6 +7,7 @@ provider:
   frameworkVersion: '1.75.1'
   stage: ${opt:stage, 'dev'}
   region: 'us-east-1'
+  timeout: 30
   apiGateway:
     minimumCompressionSize: 1024 # Enable gzip compression for responses > 1 KB
   tracing:
@@ -33,6 +34,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
+        - dynamodb:BatchGetItem
       Resource: "arn:aws:dynamodb:us-east-1:983570756921:table/${self:provider.environment.DB_NAME}"
     - Effect: Allow
       Action:
@@ -163,6 +165,7 @@ functions:
       - http:
           path: upload
           method: get
+          authorizer: authorize
 
   vectorUpload:
     handler: src/handlers/images.uploadVector
@@ -170,6 +173,7 @@ functions:
       - http:
           path: upload-vector
           method: post
+          authorizer: authorize
 
   userCreate:
     handler: src/handlers/users.create
@@ -193,3 +197,18 @@ functions:
           path: log-in
           method: post
 
+  userRestore:
+    handler: src/handlers/users.restore
+    events:
+      - http:
+          path: restore
+          method: post
+          authorizer: authorize
+
+  searchKNN:
+    handler: src/handlers/search.search
+    events:
+      - http:
+          path: search
+          method: post
+          authorizer: authorize
