@@ -175,13 +175,6 @@ functions:
           method: post
           authorizer: authorize
 
-  vectorUpload:
-    handler: src/handlers/images.uploadVector
-    events:
-      - http:
-          path: upload-vector
-          method: post
-
   userCreate:
     handler: src/handlers/users.create
     events:
