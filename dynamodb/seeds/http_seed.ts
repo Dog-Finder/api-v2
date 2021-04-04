@@ -70,12 +70,6 @@ async function createDogNotice(path, url) {
   }
 }
 
-async function seed(url) {
-  console.log(url);
-  await createDogNotice('/found-dog', url);
-  await createDogNotice('/lost-dog', url);
-}
-
 async function main() {
   const urls = await getImages(10);
   try {
@@ -84,12 +78,12 @@ async function main() {
     console.log(error);
     await logIn();
   }
-  for (let i = 0; i < urls.length; i += 1) {
-    const url = urls[i];
+  for (let i = 0; i < urls.length - 1; i += 2) {
     // eslint-disable-next-line no-await-in-loop
-    await seed(url);
+    await createDogNotice('/found-dog', urls[i]);
+    // eslint-disable-next-line no-await-in-loop
+    await createDogNotice('/lost-dog', urls[i + 1]);
   }
-  urls.forEach(seed);
 }
 
 main();
