@@ -50,7 +50,7 @@ function createLostDogs(n: number, user: User): Array<DogFinderObject> {
       name: faker.name.firstName(),
       date: new Date(),
       sex: 'Macho',
-      imageLinks: faker.image.animals(),
+      imageLinks: 'https://dog-finder-images.s3.amazonaws.com/17443cb0-46f2-11eb-b6db-d59ec2a52aec.jpg',
       commentary: faker.lorem.sentence(10),
       marker: {
         latitude: parseFloat(faker.address.latitude()),
@@ -85,7 +85,7 @@ function createFoundDogs(n: number, user: User): Array<DogFinderObject> {
       name: faker.name.firstName(),
       date: new Date(),
       sex: 'Macho',
-      imageLinks: faker.image.animals(),
+      imageLinks: 'https://dog-finder-images.s3.amazonaws.com/17443cb0-46f2-11eb-b6db-d59ec2a52aec.jpg',
       commentary: faker.lorem.sentence(10),
       marker: {
         latitude: parseFloat(faker.address.latitude()),
