@@ -8,6 +8,6 @@ export function vectorizeImage(data: vectorData): Promise<AxiosResponse> {
   return axios.post(`${modelApi}/predict-save`, data);
 }
 
-export function searchKNN(imageLink: string): Promise<AxiosResponse> {
-  return axios.post(`${modelApi}/search`, { url: imageLink });
+export function searchKNN(imageLink: string, index: string, size: number): Promise<AxiosResponse> {
+  return axios.post(`${modelApi}/search`, { url: imageLink, index, size });
 }

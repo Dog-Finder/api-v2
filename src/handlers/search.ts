@@ -9,8 +9,8 @@ import { searchKNN } from '@src/common/vectors';
 export const search: APIGatewayProxyHandler = async (event) => {
   try {
     const requestBody = JSON.parse(event.body);
-    const { imageLink } = requestBody;
-    const response = await searchKNN(imageLink);
+    const { imageLink, index } = requestBody;
+    const response = await searchKNN(imageLink, index, 5);
     const { result: { hits } } = response.data;
     const toGet: DogFinderObject[] = hits.hits.map((hit) => Object.assign(new DogFinderObject(), {
       id: hit._source['user-id'],
