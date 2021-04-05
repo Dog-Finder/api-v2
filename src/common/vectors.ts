@@ -1,6 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
 
-const modelApi = 'https://ws1cwmx9c3.execute-api.us-east-1.amazonaws.com/dev';
+
+let modelApi = 'https://ws1cwmx9c3.execute-api.us-east-1.amazonaws.com/dev';
+if (process.env.NODE_ENV === 'staging') {
+  modelApi = 'https://il178cctjd.execute-api.us-east-1.amazonaws.com/staging';
+}
+
 // const modelApi = 'http://127.0.0.1:5000';
 type vectorData = { imageLink: string, userId: string, entryId: string}
 

@@ -25,6 +25,7 @@ export const search: APIGatewayProxyHandler = async (event) => {
 
     return createOkResponse('list', notices);
   } catch (error) {
+    console.log(error);
     return createErrorResponse(error);
   }
 };
