@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 let modelApi = 'https://ws1cwmx9c3.execute-api.us-east-1.amazonaws.com/dev';
-if (process.env.NODE_ENV === 'staging') {
+if (process.env.LAMBDA_ENV === 'staging') {
   modelApi = 'https://il178cctjd.execute-api.us-east-1.amazonaws.com/staging';
 }
 

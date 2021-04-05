@@ -19,6 +19,7 @@ provider:
     DB_NAME: dog-finder-db-${self:provider.stage}
     CONFIG_DYNAMODB_ENDPOINT: ${self:custom.endpoints.dynamodb-local}
     JWT_SECRET: secret
+    LAMBDA_ENV: ${self:provider.stage}
 
   iamRoleStatements:
     - Effect: Allow
